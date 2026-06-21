@@ -15,6 +15,20 @@ ZEBAR_EXE_WIN="$(resolve_zebar_exe)" || die "Could not resolve zebar.exe. Run ./
 export ZEBAR_EXE_WIN
 write_state_env
 
+restart_flag="$(state_dir)/restart-zebar"
+
+if is_process_running zebar.exe; then
+  if [[ -f "$restart_flag" ]]; then
+    log "Restarting Zebar to load deployed widget pack"
+    taskkill_if_running zebar.exe
+    rm -f "$restart_flag"
+    sleep 1
+  else
+    log "zebar.exe is already running"
+    exit 0
+  fi
+fi
+
 if is_process_running zebar.exe; then
   log "zebar.exe is already running"
   exit 0

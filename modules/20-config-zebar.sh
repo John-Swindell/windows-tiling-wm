@@ -95,6 +95,10 @@ mkdir -p "$(dirname "$ZEBAR_SETTINGS_WSL")"
 mv "$settings_tmp" "$ZEBAR_SETTINGS_WSL"
 record_manifest "$ZEBAR_SETTINGS_WIN::startupConfigs[bamin.bar/topbar]" json-entry "-"
 
+if is_process_running zebar.exe; then
+  touch "$(state_dir)/restart-zebar"
+fi
+
 create_wsl_link "$HOME/.config/winwm/live/zebar" "$ZEBAR_ROOT_WSL" || true
 write_state_env
 
