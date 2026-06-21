@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+source "$ROOT/lib/common.sh"
+source "$ROOT/lib/windows.sh"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ./bin/winwm apply [--enable-startup]
+  ./bin/winwm destroy [--keep-apps] [--purge-cache] [--all-versions] [--force]
+  ./bin/winwm start [--restart]
+  ./bin/winwm stop
+  ./bin/winwm restart
+  ./bin/winwm status
+  ./bin/winwm paths
+  ./bin/winwm doctor
+EOF
+}
+
+run_modules() {
+  local module
+  for module in "$@"; do
+    run_script "$ROOT/$module"
+  done
+}
+
+cmd_apply() {
+  local enable_startup=false
+  local arg
+
+  for arg in "$@"; do
+    case "$arg" in
+      --enable-startup) enable_startup=true ;;
+      -h|--help)
+        usage
+        return 0
+        ;;
+      *) die "Unknown apply option: $arg" ;;
+    esac
+  done
+
+  run_modules \
+    modules/00-preflight.sh \
+    modules/10-install-zebar.sh \
+    modules/20-config-zebar.sh \
+    modules/30-install-glazewm.sh \
+    modules/40-config-glazewm.sh \
+    modules/50-start-zebar.sh \
+    modules/60-start-glazewm.sh
+
+  if [[ "$enable_startup" == "true" ]]; then
+    run_script "$ROOT/modules/70-startup-shortcut.sh"
+  fi
+}
+
+cmd_destroy() {
+  local destroyers=(
+    destroyers/60-stop-glazewm.sh
+    destroyers/50-stop-zebar.sh
+    destroyers/40-remove-startup-shortcut.sh
+    destroyers/10-remove-configs.sh
+    destroyers/30-remove-glazewm.sh
+    destroyers/20-remove-zebar.sh
+    destroyers/00-remove-links-and-state.sh
+  )
+
+  local destroyer
+  for destroyer in "${destroyers[@]}"; do
+    run_script "$ROOT/$destroyer" "$@"
+  done
+}
+
+cmd_start() {
+  run_script "$ROOT/modules/50-start-zebar.sh"
+  run_script "$ROOT/modules/60-start-glazewm.sh" "$@"
+}
+
+cmd_stop() {
+  run_script "$ROOT/destroyers/60-stop-glazewm.sh"
+  run_script "$ROOT/destroyers/50-stop-zebar.sh"
+}
+
+cmd_status() {
+  load_state_if_exists
+  ensure_windows_paths
+  write_state_env
+
+  local glazewm_exe="${GLAZEWM_EXE_WIN:-}"
+  local zebar_exe="${ZEBAR_EXE_WIN:-}"
+
+  if [[ -z "$glazewm_exe" ]]; then
+    glazewm_exe="$(find_windows_exe "$GLAZEWM_INSTALL_ROOT_WIN" 'glazewm.exe')"
+  fi
+
+  if [[ -z "$zebar_exe" ]]; then
+    zebar_exe="$(find_windows_exe "$ZEBAR_INSTALL_ROOT_WIN" 'zebar.exe')"
+  fi
+
+  cat <<EOF
+Versions:
+  GlazeWM: $GLAZEWM_VERSION
+  Zebar:   $ZEBAR_VERSION
+
+Processes:
+  glazewm.exe: $(process_status_text glazewm.exe)
+  zebar.exe:   $(process_status_text zebar.exe)
+
+Executables:
+  GlazeWM: ${glazewm_exe:-not installed}
+  Zebar:   ${zebar_exe:-not installed}
+
+Live configs:
+  GlazeWM: $GLAZEWM_CONFIG_WIN
+  Zebar:   $ZEBAR_PACK_WIN
+
+WSL edit links:
+  $HOME/.config/winwm/live/glazewm
+  $HOME/.config/winwm/live/zebar
+EOF
+}
+
+cmd_paths() {
+  load_state_if_exists
+  ensure_windows_paths
+  write_state_env
+
+  cat <<EOF
+Windows home:
+  $WIN_HOME_WIN
+
+WSL view:
+  $WIN_HOME_WSL
+
+App root:
+  $WINWM_APP_ROOT_WIN
+
+GlazeWM install root:
+  $GLAZEWM_INSTALL_ROOT_WIN
+
+Zebar install root:
+  $ZEBAR_INSTALL_ROOT_WIN
+
+GlazeWM live config:
+  $GLAZEWM_CONFIG_WIN
+
+Zebar live root:
+  $ZEBAR_ROOT_WIN
+EOF
+}
+
+cmd_doctor() {
+  run_script "$ROOT/modules/00-preflight.sh"
+}
+
+main() {
+  local command="${1:-}"
+  [[ -n "$command" ]] || {
+    usage
+    exit 1
+  }
+  shift || true
+
+  case "$command" in
+    apply) cmd_apply "$@" ;;
+    destroy) cmd_destroy "$@" ;;
+    start) cmd_start "$@" ;;
+    stop) cmd_stop ;;
+    restart)
+      cmd_stop
+      cmd_start --restart
+      ;;
+    status) cmd_status ;;
+    paths) cmd_paths ;;
+    doctor) cmd_doctor ;;
+    -h|--help|help) usage ;;
+    *) die "Unknown command: $command" ;;
+  esac
+}
+
+main "$@"
