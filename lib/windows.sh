@@ -127,7 +127,9 @@ msiexec_admin_extract() {
   local msi_win="$1"
   local target_win="$2"
 
-  powershell "\$ErrorActionPreference = 'Stop'; New-Item -ItemType Directory -Force -Path $(ps_quote "$target_win") | Out-Null; \$p = Start-Process -FilePath 'msiexec.exe' -Wait -PassThru -ArgumentList @('/a', $(ps_quote "$msi_win"), '/qb', $(ps_quote "TARGETDIR=$target_win")); if (\$p.ExitCode -ne 0) { throw \"msiexec failed with exit code \$(\$p.ExitCode)\" }"
+  # msiexec /a cannot open packages over the \\wsl$ / \\wsl.localhost share, so
+  # stage the MSI on the real Windows filesystem (%TEMP%) before extracting.
+  powershell "\$ErrorActionPreference = 'Stop'; \$src = $(ps_quote "$msi_win"); \$target = $(ps_quote "$target_win"); New-Item -ItemType Directory -Force -Path \$target | Out-Null; \$tmp = Join-Path \$env:TEMP ('winwm-' + [System.IO.Path]::GetFileName(\$src)); Copy-Item -LiteralPath \$src -Destination \$tmp -Force; try { \$p = Start-Process -FilePath 'msiexec.exe' -Wait -PassThru -ArgumentList @('/a', \$tmp, '/qb', \"TARGETDIR=\$target\"); if (\$p.ExitCode -ne 0) { throw \"msiexec failed with exit code \$(\$p.ExitCode)\" } } finally { Remove-Item -LiteralPath \$tmp -Force -ErrorAction SilentlyContinue }"
 }
 
 resolve_zebar_exe() {
