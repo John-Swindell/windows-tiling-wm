@@ -127,7 +127,7 @@ msiexec_admin_extract() {
   local msi_win="$1"
   local target_win="$2"
 
-  powershell "\$ErrorActionPreference = 'Stop'; New-Item -ItemType Directory -Force -Path $(ps_quote "$target_win") | Out-Null; \$p = Start-Process -FilePath 'msiexec.exe' -Wait -PassThru -ArgumentList @('/a', $(ps_quote "$msi_win"), '/qb', $(ps_quote "TARGETDIR=$target_win")); if (\$p.ExitCode -ne 0) { throw \"msiexec failed with exit code \$($p.ExitCode)\" }"
+  powershell "\$ErrorActionPreference = 'Stop'; New-Item -ItemType Directory -Force -Path $(ps_quote "$target_win") | Out-Null; \$p = Start-Process -FilePath 'msiexec.exe' -Wait -PassThru -ArgumentList @('/a', $(ps_quote "$msi_win"), '/qb', $(ps_quote "TARGETDIR=$target_win")); if (\$p.ExitCode -ne 0) { throw \"msiexec failed with exit code \$(\$p.ExitCode)\" }"
 }
 
 resolve_zebar_exe() {
