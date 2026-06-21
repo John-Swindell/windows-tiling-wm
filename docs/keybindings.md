@@ -5,19 +5,22 @@ The GlazeWM template follows an i3-style HJKL workflow.
 | Binding | Action |
 | --- | --- |
 | `alt+h/j/k/l` | Focus left/down/up/right |
-| `alt+shift+h/j/k/l` | Move window left/down/up/right |
+| `alt+m` | Enter move mode |
+| `h/j/k/l` in move mode | Move focused window left/down/up/right |
+| `escape`, `enter`, `alt+m` | Leave move mode |
 | `alt+r` | Enter resize mode |
 | `h/j/k/l` in resize mode | Resize focused window |
 | `escape`, `enter`, `alt+r` | Leave resize mode |
 | `alt+1..9` | Focus workspace |
-| `alt+shift+1..9` | Move window to workspace and follow |
+| `alt+w`, then `1..9` | Move window to workspace and follow |
+| `escape`, `enter`, `alt+w` | Leave send mode without moving |
 | `alt+a` / `alt+s` | Previous/next active workspace |
 | `alt+d` | Recent workspace |
 | `alt+v` | Toggle tiling direction |
 | `alt+f` | Toggle fullscreen |
 | `alt+shift+space` | Toggle centered floating |
 | `alt+t` | Toggle tiling |
-| `alt+m` | Minimize |
+| `alt+z` | Minimize |
 | `alt+shift+q` | Close window |
 | `alt+shift+r` | Reload config |
 | `alt+shift+w` | Redraw windows |

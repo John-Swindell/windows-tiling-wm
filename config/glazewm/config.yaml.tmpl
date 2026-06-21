@@ -96,6 +96,19 @@ window_rules:
       - window_title: { regex: 'Open|Save As|Save File|Select Folder' }
 
 binding_modes:
+  - name: 'move'
+    keybindings:
+      - commands: ['move --direction left']
+        bindings: ['h', 'left']
+      - commands: ['move --direction down']
+        bindings: ['j', 'down']
+      - commands: ['move --direction up']
+        bindings: ['k', 'up']
+      - commands: ['move --direction right']
+        bindings: ['l', 'right']
+      - commands: ['wm-disable-binding-mode --name move']
+        bindings: ['escape', 'enter', 'alt+m']
+
   - name: 'resize'
     keybindings:
       - commands: ['resize --width -2%']
@@ -109,6 +122,29 @@ binding_modes:
       - commands: ['wm-disable-binding-mode --name resize']
         bindings: ['escape', 'enter', 'alt+r']
 
+  - name: 'send'
+    keybindings:
+      - commands: ['move --workspace 1', 'focus --workspace 1', 'wm-disable-binding-mode --name send']
+        bindings: ['1']
+      - commands: ['move --workspace 2', 'focus --workspace 2', 'wm-disable-binding-mode --name send']
+        bindings: ['2']
+      - commands: ['move --workspace 3', 'focus --workspace 3', 'wm-disable-binding-mode --name send']
+        bindings: ['3']
+      - commands: ['move --workspace 4', 'focus --workspace 4', 'wm-disable-binding-mode --name send']
+        bindings: ['4']
+      - commands: ['move --workspace 5', 'focus --workspace 5', 'wm-disable-binding-mode --name send']
+        bindings: ['5']
+      - commands: ['move --workspace 6', 'focus --workspace 6', 'wm-disable-binding-mode --name send']
+        bindings: ['6']
+      - commands: ['move --workspace 7', 'focus --workspace 7', 'wm-disable-binding-mode --name send']
+        bindings: ['7']
+      - commands: ['move --workspace 8', 'focus --workspace 8', 'wm-disable-binding-mode --name send']
+        bindings: ['8']
+      - commands: ['move --workspace 9', 'focus --workspace 9', 'wm-disable-binding-mode --name send']
+        bindings: ['9']
+      - commands: ['wm-disable-binding-mode --name send']
+        bindings: ['escape', 'enter', 'alt+w']
+
 keybindings:
   - commands: ['focus --direction left']
     bindings: ['alt+h', 'alt+left']
@@ -119,17 +155,12 @@ keybindings:
   - commands: ['focus --direction right']
     bindings: ['alt+l', 'alt+right']
 
-  - commands: ['move --direction left']
-    bindings: ['alt+shift+h', 'alt+shift+left']
-  - commands: ['move --direction down']
-    bindings: ['alt+shift+j', 'alt+shift+down']
-  - commands: ['move --direction up']
-    bindings: ['alt+shift+k', 'alt+shift+up']
-  - commands: ['move --direction right']
-    bindings: ['alt+shift+l', 'alt+shift+right']
-
+  - commands: ['wm-enable-binding-mode --name move']
+    bindings: ['alt+m']
   - commands: ['wm-enable-binding-mode --name resize']
     bindings: ['alt+r']
+  - commands: ['wm-enable-binding-mode --name send']
+    bindings: ['alt+w']
   - commands: ['wm-toggle-pause']
     bindings: ['alt+shift+p']
   - commands: ['toggle-tiling-direction']
@@ -141,7 +172,7 @@ keybindings:
   - commands: ['toggle-tiling']
     bindings: ['alt+t']
   - commands: ['toggle-minimized']
-    bindings: ['alt+m']
+    bindings: ['alt+z']
   - commands: ['close']
     bindings: ['alt+shift+q']
   - commands: ['wm-reload-config']
@@ -178,22 +209,3 @@ keybindings:
     bindings: ['alt+8']
   - commands: ['focus --workspace 9']
     bindings: ['alt+9']
-
-  - commands: ['move --workspace 1', 'focus --workspace 1']
-    bindings: ['alt+shift+1']
-  - commands: ['move --workspace 2', 'focus --workspace 2']
-    bindings: ['alt+shift+2']
-  - commands: ['move --workspace 3', 'focus --workspace 3']
-    bindings: ['alt+shift+3']
-  - commands: ['move --workspace 4', 'focus --workspace 4']
-    bindings: ['alt+shift+4']
-  - commands: ['move --workspace 5', 'focus --workspace 5']
-    bindings: ['alt+shift+5']
-  - commands: ['move --workspace 6', 'focus --workspace 6']
-    bindings: ['alt+shift+6']
-  - commands: ['move --workspace 7', 'focus --workspace 7']
-    bindings: ['alt+shift+7']
-  - commands: ['move --workspace 8', 'focus --workspace 8']
-    bindings: ['alt+shift+8']
-  - commands: ['move --workspace 9', 'focus --workspace 9']
-    bindings: ['alt+shift+9']

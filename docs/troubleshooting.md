@@ -29,6 +29,25 @@ Open the Zebar tray icon and check `bamin.bar` / `topbar`. The pack is deployed 
 %USERPROFILE%\.glzr\zebar\bamin.bar
 ```
 
+Apply also adds this startup config to `%USERPROFILE%\.glzr\zebar\settings.json`:
+
+```json
+{
+  "pack": "bamin.bar",
+  "widget": "topbar",
+  "preset": "default"
+}
+```
+
+If Zebar was already running, restart it with:
+
+```bash
+./bin/winwm stop
+./bin/winwm start
+```
+
+The custom bar should be a dark translucent 36px top bar with workspace pills on the left, the focused window title centered, status metrics on the right, and an amber mode pill when GlazeWM is in `MOVE`, `RESIZE`, or `SEND` mode. If it still looks like the stock Zebar widget, Zebar is likely running another startup widget; use the tray menu to disable that widget's `Run on startup`.
+
 If Zebar logs WebView2 errors, the machine may need the Microsoft Edge WebView2 runtime. That is outside this repo because many work machines control it through IT policy.
 
 ## GlazeWM Starts Without Gaps For The Bar
