@@ -172,7 +172,7 @@ record_manifest() {
   tmp="$(mktemp)"
 
   if [[ -f "$file" ]]; then
-    awk -F '\t' -v p="$path" '$1 != p { print }' "$file" >"$tmp"
+    p="$path" awk -F '\t' '$1 != ENVIRON["p"] { print }' "$file" >"$tmp"
   fi
 
   printf '%s\t%s\t%s\t%s\t%s\n' \
@@ -191,7 +191,7 @@ manifest_has_path() {
   file="$(manifest_file)"
 
   [[ -f "$file" ]] || return 1
-  awk -F '\t' -v p="$path" '$1 == p { found = 1 } END { exit found ? 0 : 1 }' "$file"
+  p="$path" awk -F '\t' '$1 == ENVIRON["p"] { found = 1 } END { exit found ? 0 : 1 }' "$file"
 }
 
 is_managed_file() {

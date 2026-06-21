@@ -22,6 +22,6 @@ manifest_remove_path() {
 
   [[ -f "$file" ]] || return 0
   tmp="$(mktemp)"
-  awk -F '\t' -v p="$path" '$1 != p { print }' "$file" >"$tmp"
+  p="$path" awk -F '\t' '$1 != ENVIRON["p"] { print }' "$file" >"$tmp"
   mv "$tmp" "$file"
 }
