@@ -1,0 +1,35 @@
+{
+  "name": "bamin.bar",
+  "version": "0.1.0",
+  "description": "managed-by: winwm-dotfiles; Minimal work bar managed by winwm-dotfiles",
+  "tags": ["winwm", "glazewm", "managed-by:winwm-dotfiles"],
+  "widgets": [
+    {
+      "name": "topbar",
+      "htmlPath": "./index.html",
+      "zOrder": "top_most",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": true,
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "top_center",
+          "offsetX": "0px",
+          "offsetY": "0px",
+          "width": "100%",
+          "height": "36px",
+          "monitorSelection": {
+            "type": "all"
+          },
+          "dockToEdge": {
+            "enabled": true,
+            "edge": "top",
+            "windowMargin": "0px"
+          }
+        }
+      ]
+    }
+  ]
+}

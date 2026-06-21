@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- managed-by: winwm-dotfiles -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>bamin.bar</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="bar" data-provider-state="loading">
+      <section class="zone zone-left" aria-label="Workspaces">
+        <div id="workspaces" class="workspaces" aria-live="polite"></div>
+      </section>
+
+      <section class="zone zone-center" aria-label="Focused window">
+        <div id="mode" class="mode hidden"></div>
+        <div id="title" class="title">GlazeWM</div>
+      </section>
+
+      <section class="zone zone-right" aria-label="System status">
+        <div id="cpu" class="metric hidden">CPU --</div>
+        <div id="network" class="metric hidden">NET --</div>
+        <div id="battery" class="metric hidden">BAT --</div>
+        <div id="clock" class="clock">--:--</div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
