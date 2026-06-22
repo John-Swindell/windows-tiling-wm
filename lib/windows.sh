@@ -91,11 +91,32 @@ is_process_running() {
   powershell "if (Get-Process -Name $(ps_quote "$process_name") -ErrorAction SilentlyContinue) { exit 0 } exit 1" >/dev/null 2>&1
 }
 
+wait_for_process_exit() {
+  local process_name="${1%.exe}"
+  local timeout="${2:-10}"
+  local waited=0
+
+  while is_process_running "$process_name"; do
+    if (( waited >= timeout )); then
+      return 1
+    fi
+    sleep 1
+    waited=$((waited + 1))
+  done
+
+  return 0
+}
+
 taskkill_if_running() {
   local process_name="${1%.exe}"
 
   if is_process_running "$process_name"; then
     powershell "Stop-Process -Name $(ps_quote "$process_name") -Force -ErrorAction SilentlyContinue" >/dev/null
+    # Stop-Process returns before the process fully exits and releases its
+    # listening socket; wait so a relaunch can bind the port (avoids os error
+    # 10048 / address-in-use).
+    wait_for_process_exit "$process_name" 10 \
+      || warn "$process_name.exe did not exit within timeout"
     log "Stopped $process_name.exe"
   else
     log "$process_name.exe is not running"

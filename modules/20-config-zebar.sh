@@ -50,6 +50,10 @@ startup_config = {
     "preset": "default",
 }
 
+# Packs to drop from startup so they don't render over our bar (e.g. the
+# bundled starter widget that Zebar seeds settings.json with by default).
+remove_packs = {"glzr-io.starter"}
+
 if settings_path.exists():
     try:
         settings = json.loads(settings_path.read_text(encoding="utf-8"))
@@ -75,6 +79,9 @@ updated = False
 for config in startup_configs:
     if not isinstance(config, dict):
         next_startup_configs.append(config)
+        continue
+
+    if config.get("pack") in remove_packs:
         continue
 
     if config.get("pack") == startup_config["pack"] and config.get("widget") == startup_config["widget"]:

@@ -7,6 +7,7 @@
     {
       "name": "topbar",
       "htmlPath": "./index.html",
+      "includeFiles": ["*.html", "*.css", "*.js"],
       "zOrder": "top_most",
       "shownInTaskbar": false,
       "focused": false,

@@ -29,15 +29,21 @@ write_state_env
 
 [[ -f "$GLAZEWM_CONFIG_WSL" ]] || die "Missing GlazeWM live config: $GLAZEWM_CONFIG_WSL"
 
+restart_flag="$(state_dir)/restart-glazewm"
+
 if is_process_running glazewm.exe; then
-  if [[ "$restart" == "true" ]]; then
+  if [[ "$restart" == "true" || -f "$restart_flag" ]]; then
+    log "Restarting GlazeWM to load deployed config"
     taskkill_if_running glazewm.exe
+    rm -f "$restart_flag"
     sleep 1
   else
     log "glazewm.exe is already running"
     exit 0
   fi
 fi
+
+rm -f "$restart_flag"
 
 log "Starting GlazeWM: $GLAZEWM_EXE_WIN"
 start_windows_process "$GLAZEWM_EXE_WIN" "start --config=\"$GLAZEWM_CONFIG_WIN\""

@@ -3,10 +3,11 @@
 # do-not-edit-live: edit repo source, then run ./apply.sh
 
 general:
-  startup_commands:
-    - 'shell-exec __ZEBAR_EXE_WIN__'
-  shutdown_commands:
-    - 'shell-exec taskkill /IM zebar.exe /F'
+  # Zebar is launched and restarted by the winwm start modules (bin/winwm
+  # start runs modules/50-start-zebar.sh). GlazeWM must NOT also launch it, or
+  # the second instance fails to bind its server port (os error 10048).
+  startup_commands: []
+  shutdown_commands: []
   config_reload_commands: []
   focus_follows_cursor: false
   toggle_workspace_on_refocus: false
@@ -62,15 +63,28 @@ window_behavior:
       shown_on_top: false
 
 workspaces:
+  # Desktops grouped per monitor. bind_to_monitor is a 0-based index ordered
+  # left-to-right by screen position (0 = leftmost). 1-3 = primary (index 1),
+  # 4-6 = leftmost (index 0), 7-9 = rightmost (index 2). Swap the indexes below
+  # if a group lands on the wrong display.
   - name: '1'
+    bind_to_monitor: 1
   - name: '2'
+    bind_to_monitor: 1
   - name: '3'
+    bind_to_monitor: 1
   - name: '4'
+    bind_to_monitor: 0
   - name: '5'
+    bind_to_monitor: 0
   - name: '6'
+    bind_to_monitor: 0
   - name: '7'
+    bind_to_monitor: 2
   - name: '8'
+    bind_to_monitor: 2
   - name: '9'
+    bind_to_monitor: 2
 
 window_rules:
   - commands: ['ignore']
@@ -124,23 +138,23 @@ binding_modes:
 
   - name: 'send'
     keybindings:
-      - commands: ['move --workspace 1', 'focus --workspace 1', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 1', 'focus --workspace 1']
         bindings: ['1']
-      - commands: ['move --workspace 2', 'focus --workspace 2', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 2', 'focus --workspace 2']
         bindings: ['2']
-      - commands: ['move --workspace 3', 'focus --workspace 3', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 3', 'focus --workspace 3']
         bindings: ['3']
-      - commands: ['move --workspace 4', 'focus --workspace 4', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 4', 'focus --workspace 4']
         bindings: ['4']
-      - commands: ['move --workspace 5', 'focus --workspace 5', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 5', 'focus --workspace 5']
         bindings: ['5']
-      - commands: ['move --workspace 6', 'focus --workspace 6', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 6', 'focus --workspace 6']
         bindings: ['6']
-      - commands: ['move --workspace 7', 'focus --workspace 7', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 7', 'focus --workspace 7']
         bindings: ['7']
-      - commands: ['move --workspace 8', 'focus --workspace 8', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 8', 'focus --workspace 8']
         bindings: ['8']
-      - commands: ['move --workspace 9', 'focus --workspace 9', 'wm-disable-binding-mode --name send']
+      - commands: ['move --workspace 9', 'focus --workspace 9']
         bindings: ['9']
       - commands: ['wm-disable-binding-mode --name send']
         bindings: ['escape', 'enter', 'alt+w']

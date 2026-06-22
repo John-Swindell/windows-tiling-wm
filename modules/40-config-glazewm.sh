@@ -33,6 +33,12 @@ record_manifest "$GLAZEWM_CONFIG_WIN" file "$(sha256_file "$GLAZEWM_CONFIG_WSL")
 create_wsl_link "$HOME/.config/winwm/live/glazewm" "$GLAZEWM_LIVE_DIR_WSL" || true
 write_state_env
 
+# A running GlazeWM keeps its old in-memory config, so flag a restart to make
+# the start module reload the freshly deployed config.
+if is_process_running glazewm.exe; then
+  touch "$(state_dir)/restart-glazewm"
+fi
+
 cat <<EOF
 GlazeWM config deployed:
   Windows: $GLAZEWM_CONFIG_WIN

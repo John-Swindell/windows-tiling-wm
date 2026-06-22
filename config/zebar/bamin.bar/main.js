@@ -184,7 +184,10 @@ async function loadZebarApi() {
   }
 
   try {
-    return await import("zebar");
+    // Zebar's webview has no bundler/import map, so a bare "zebar" specifier
+    // can't resolve. Load the client API from the CDN like the starter pack,
+    // pinned to the installed Zebar version.
+    return await import("https://esm.sh/zebar@3.3");
   } catch {
     return null;
   }
